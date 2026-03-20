@@ -116,7 +116,7 @@ JWT_SECRET=your_super_secret_key_here
 Start the backend server:
 
 ```bash
-npm run dev
+node server.js
 ```
 
 ---
