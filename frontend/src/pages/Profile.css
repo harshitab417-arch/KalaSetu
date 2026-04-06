@@ -1421,30 +1421,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-<<<<<<< HEAD
-/* ---- Profile-Specific Posts Grid Layout ---- */
-.prof-posts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: stretch;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.prof-posts-grid .post-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 860px) {
-  .prof-posts-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-=======
 
 /* ========================================================
    GLOBAL MOBILE OPTIMIZATION (Responsive Overrides)
@@ -1564,4 +1540,3 @@
     gap: 6px;
   }
 }
->>>>>>> eff47723227a721ccc6288f319f064e8de043079
