@@ -31,7 +31,24 @@
 .prof-hero {
   border-radius: 28px;
   overflow: hidden;
-  margin-bottom: 28px;
+  margin-bottom: 0;
+}
+
+/* ---- Hero + Sidebar side-by-side layout ---- */
+.prof-hero-with-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.prof-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 104px;
 }
 
 .prof-cover {
@@ -257,20 +274,26 @@
 
 .prof-stats-row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .prof-stat-card {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px;
-  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 18px;
+  min-width: 110px;
+  border-radius: 20px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 243, 237, 0.86));
   border: 1px solid rgba(47, 111, 109, 0.08);
-  box-shadow: 0 6px 16px rgba(43, 43, 43, 0.05);
+  box-shadow: 0 8px 24px rgba(43, 43, 43, 0.06);
+  transition: all 0.3s ease;
 }
 
 .prof-stat-icon {
@@ -413,12 +436,78 @@
   }
 }
 
+/* Content Toggle Buttons (Posts / Reposts) */
+.prof-content-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.prof-content-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(47, 111, 109, 0.15);
+  background: rgba(247, 243, 237, 0.9);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prof-content-btn i {
+  font-size: 13px;
+}
+
+.prof-content-btn:hover {
+  background: rgba(167, 196, 188, 0.2);
+  border-color: rgba(47, 111, 109, 0.3);
+  color: var(--brand-700);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 111, 109, 0.1);
+}
+
+.prof-content-btn.active {
+  background: linear-gradient(135deg, var(--brand-700), #6f9c95);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(47, 111, 109, 0.28);
+  transform: translateY(-1px);
+}
+
+.prof-content-btn.active:hover {
+  box-shadow: 0 10px 24px rgba(47, 111, 109, 0.34);
+  transform: translateY(-2px);
+}
+
+.prof-content-btn-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.prof-content-btn:not(.active) .prof-content-btn-count {
+  background: rgba(47, 111, 109, 0.12);
+  color: var(--brand-700);
+}
+
 .prof-sidebar {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  position: sticky;
-  top: 104px;
+  position: static;
 }
 
 .prof-card,
@@ -1076,6 +1165,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  text-align: left;
 }
 
 .prof-liker-username {
@@ -1100,22 +1190,17 @@
     padding-top: 0;
   }
 
-  .prof-body {
+  .prof-hero-with-sidebar {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  .prof-sidebar {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .prof-sidebar-col {
     position: static;
   }
 
-  .prof-sidebar .prof-card {
-    padding: 0 0 18px;
-  }
-
-  .prof-posts-grid {
-    grid-template-columns: 1fr;
+  .prof-content-btns {
+    flex-direction: row;
   }
 }
 
@@ -1164,6 +1249,15 @@
 
   .prof-sidebar {
     grid-template-columns: 1fr;
+  }
+
+  .prof-content-btns {
+    gap: 8px;
+  }
+
+  .prof-content-btn {
+    font-size: 12px;
+    padding: 11px 12px;
   }
 
   .prof-posts-section {
@@ -1326,4 +1420,26 @@
 .prof-report-confirm:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+/* ---- Profile-Specific Posts Grid Layout ---- */
+.prof-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.prof-posts-grid .post-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 860px) {
+  .prof-posts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
