@@ -34,19 +34,19 @@
 
 /* ── Main Container — three-column ─────────────────────────────────────────── */
 .home-container {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 22px 40px 60px;
+  padding: 22px 24px 60px;
   display: grid;
-  grid-template-columns: 268px minmax(350px, 490px) 268px;
+  grid-template-columns: 280px minmax(450px, 720px) 280px;
   justify-content: center;
-  gap: 22px;
+  gap: 24px;
   align-items: start;
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1200px) {
   .home-container {
-    grid-template-columns: 268px minmax(0, 1fr);
+    grid-template-columns: 280px minmax(0, 1fr);
   }
 
   .home-right-sidebar {
@@ -576,6 +576,7 @@
   gap: 4px;
   padding-top: 8px;
   border-top: 1px solid var(--home-border);
+  margin-top: auto;
 }
 
 .post-action-btn {

@@ -234,7 +234,59 @@ router.get("/:userId/follow-status", requireAuth, async (req, res, next) => {
     const isFollowing = me.following.includes(req.params.userId);
     const target = await User.findById(req.params.userId);
     const hasRequested = target?.followRequests?.includes(me._id) || false;
-    res.json({ following: isFollowing, requested: hasRequested, followersCount: target?.followers?.length || 0 });
+    res.json({
+      following: isFollowing,
+      requested: hasRequested,
+      followersCount: target?.followers?.length || 0,
+      followingCount: target?.following?.length || 0,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET following list for a user
+router.get("/:userId/following", async (req, res, next) => {
+  try {
+    const targetUser = await User.findById(req.params.userId);
+    if (!targetUser) return res.status(404).json({ message: "User not found" });
+
+    const targetProfile = await Profile.findOne({ user: req.params.userId });
+    const isPrivate = targetProfile?.isPrivate || false;
+
+    if (isPrivate) {
+      const authHeader = req.headers.authorization;
+      let requesterId = null;
+      if (authHeader?.startsWith("Bearer ")) {
+        try {
+          const decoded = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
+          requesterId = decoded.id || decoded._id;
+        } catch { /* invalid token — treat as guest */ }
+      }
+      const isOwner = requesterId && requesterId.toString() === req.params.userId;
+      const isFollower = requesterId && targetUser.followers.some(f => f.toString() === requesterId.toString());
+      if (!isOwner && !isFollower) {
+        return res.status(403).json({ message: "This profile is private. Only followers can view the following list." });
+      }
+    }
+
+    const populatedUser = await User.findById(req.params.userId)
+      .populate("following", "username fullName _id");
+
+    const followingIds = populatedUser.following.map(f => f._id);
+    const profiles = await Profile.find({ user: { $in: followingIds } }).select("user photo displayName");
+    const photoMap = {};
+    profiles.forEach(p => { photoMap[p.user.toString()] = { photo: p.photo, displayName: p.displayName }; });
+
+    const following = populatedUser.following.map(f => ({
+      _id: f._id,
+      username: f.username,
+      fullName: f.fullName,
+      photo: photoMap[f._id.toString()]?.photo || null,
+      displayName: photoMap[f._id.toString()]?.displayName || null,
+    }));
+
+    res.json({ following, total: following.length });
   } catch (err) {
     next(err);
   }
