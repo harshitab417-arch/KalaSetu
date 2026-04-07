@@ -69,6 +69,7 @@ function Profile() {
   const [followingCount, setFollowingCount] = useState(0);
   const [followLoading, setFollowLoading] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showUnfollowDropdown, setShowUnfollowDropdown] = useState(false);
   const [moreModal, setMoreModal] = useState(null);
   const [moreToast, setMoreToast] = useState("");
   const [reportReason, setReportReason] = useState("");
@@ -613,15 +614,31 @@ function Profile() {
                   </button>
                 )}
                 {currentUser && !isOwn && !isBlocked && (
-                  <button
-                    className={`prof-primary-btn ${following ? "prof-following-btn" : requested ? "prof-requested-btn" : ""}`}
-                    style={requested ? { background: "rgba(47, 111, 109, 0.15)", color: "var(--brand-900)" } : {}}
-                    onClick={handleFollow}
-                    disabled={followLoading}
-                  >
-                    <i className={`fi ${following ? "fi-sr-user-check" : requested ? "fi-sr-time-check" : "fi-sr-user-add"}`} />
-                    {following ? "Following" : requested ? "Requested" : "Follow"}
-                  </button>
+                  <div className="prof-more-wrap" style={{ position: "relative" }}>
+                    <button
+                      className={`prof-primary-btn ${following ? "prof-following-btn" : requested ? "prof-requested-btn" : ""}`}
+                      style={requested ? { background: "rgba(47, 111, 109, 0.15)", color: "var(--brand-900)" } : {}}
+                      onClick={() => following ? setShowUnfollowDropdown((prev) => !prev) : handleFollow()}
+                      disabled={followLoading}
+                    >
+                      <i className={`fi ${following ? "fi-sr-user-check" : requested ? "fi-sr-time-check" : "fi-sr-user-add"}`} />
+                      {following ? "Following" : requested ? "Requested" : "Follow"}
+                    </button>
+                    {following && showUnfollowDropdown && (
+                      <>
+                        <div className="prof-more-overlay" onClick={() => setShowUnfollowDropdown(false)} />
+                        <div className="prof-more-dropdown" style={{ right: 0, left: "auto", minWidth: "120px" }}>
+                          <button 
+                            className="prof-unfollow-btn"
+                            onClick={() => { setShowUnfollowDropdown(false); handleFollow(); }}
+                            style={{ color: "#e11d48", fontWeight: "600" }}
+                          >
+                            Unfollow
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
                 {currentUser && !isOwn && (
                   <button
