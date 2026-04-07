@@ -75,9 +75,12 @@ function PolicyModal({ type, onClose }) {
   );
 }
 
+// track if intro has played in this SPA session (resets on hard reload)
+let hasPlayedIntro = false;
+
 function Landing() {
   const navigate = useNavigate();
-  const [introDone, setIntroDone] = useState(false); // ← ADDED
+  const [introDone, setIntroDone] = useState(hasPlayedIntro);
   const [showTop, setShowTop] = useState(false);
   const [modal, setModal] = useState(null);
 
@@ -101,9 +104,12 @@ function Landing() {
     }))
   );
 
-  // ← ADDED: show intro first
+  // show intro first
   if (!introDone) {
-    return <IntroAnimation onDone={() => setIntroDone(true)} />;
+    return <IntroAnimation onDone={() => {
+      hasPlayedIntro = true;
+      setIntroDone(true);
+    }} />;
   }
 
   return (
