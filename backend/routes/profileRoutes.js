@@ -165,9 +165,21 @@ router.put("/:userId/reject-follow", requireAuth, async (req, res, next) => {
     // Update the original request notification so the owner sees it was rejected
     // (Run outside block to clean up stuck legacy notifications)
     await Notification.updateMany(
-      { recipient: me._id, sender: requester._id, type: "follow_request" },
+      { recipient: me._id, sender: requesterId, type: "follow_request" },
       { type: "follow_rejected_by_me" }
     );
+
+    // Notify requester that their request was declined
+    const newNotif = new Notification({
+      recipient: requesterId,
+      sender: me._id,
+      type: "follow_reject",
+    });
+    await newNotif.save();
+
+    const populated = await newNotif.populate("sender", "username fullName");
+    const receiverSocketId = getReceiverSocketId(requesterId.toString());
+    if (receiverSocketId) io.to(receiverSocketId).emit("newNotification", populated);
     
     res.json({ message: "Follow request rejected" });
   } catch (err) {
