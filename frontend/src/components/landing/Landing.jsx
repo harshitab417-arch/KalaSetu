@@ -154,9 +154,6 @@ function Landing() {
               Already a member? Sign in
             </button>
           </div>
-          <p className="l-terms">
-            By joining, you agree to our <span onClick={() => setModal("terms")}>Terms</span> & <span onClick={() => setModal("privacy")}>Privacy Policy</span>
-          </p>
         </div>
 
         <div className="l-hero-right">
@@ -284,6 +281,24 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* GitHub-Style Footer */}
+      <footer className="l-footer">
+        <div className="l-footer-inner">
+          <div className="l-footer-left">
+            <img src={kalasetuLogo} alt="KalaSetu" className="l-footer-logo" />
+            <span className="l-copyright">&copy; 2026 KalaSetu, Inc.</span>
+          </div>
+          <div className="l-footer-links">
+            <span className="l-footer-link" onClick={() => setModal("terms")}>Terms</span>
+            <span className="l-footer-link" onClick={() => setModal("privacy")}>Privacy</span>
+            <span className="l-footer-link" onClick={() => alert("Security details coming soon!")}>Security</span>
+            <span className="l-footer-link" onClick={() => alert("Status page coming soon!")}>Status</span>
+            <span className="l-footer-link" onClick={() => alert("Documentation coming soon!")}>Docs</span>
+            <span className="l-footer-link" onClick={() => alert("Support contact coming soon!")}>Contact</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
