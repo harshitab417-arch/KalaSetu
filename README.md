@@ -1,6 +1,6 @@
 # KalaSetu
 
-> *Kala* (Art) + *Setu* (Bridge) — A cultural networking platform bridging artisans, NGOs, and art lovers across India.
+> *Kala* (Art) + *Setu* (Bridge) — A cultural networking platform bridging artisans, NGOs, and art lovers across India
 
 ---
 
