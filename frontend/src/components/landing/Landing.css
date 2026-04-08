@@ -170,7 +170,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 60px 60px 20px;
+  padding: 30px 60px 10px;
   min-height: auto;
   gap: 40px;
 }
@@ -308,10 +308,10 @@
   justify-content: center;
   align-items: center;
   gap: 0;
-  margin: 20px 60px 40px;
+  margin: 15px 60px 40px;
   background: var(--teal);
   border-radius: 20px;
-  padding: 30px 50px;
+  padding: 15px 40px;
   box-shadow: 0 12px 40px rgba(26, 18, 8, 0.2);
 }
 
@@ -325,7 +325,7 @@
   font-size: 42px;
   font-weight: 900;
   color: var(--cream);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .l-stat-label {
@@ -346,8 +346,9 @@
 .l-features {
   position: relative;
   z-index: 1;
-  padding: 20px 60px 40px;
+  padding: 10px 60px 40px;
   text-align: center;
+  scroll-margin-top: 100px;
 }
 
 .l-section-tag {
@@ -370,54 +371,108 @@
   font-weight: 900;
   color: var(--ink);
   line-height: 1.15;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
-.l-features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.l-features-carousel {
+  position: relative;
+  height: 340px;
+  /* Adjust according to card height */
   max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* To strictly hide far elements */
 }
 
-.l-feature-card {
+.l-feature-card-carousel {
+  position: absolute;
+  width: 300px;
   background: #fff;
   border-radius: 18px;
   padding: 32px 24px;
   text-align: left;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(0, 0, 0, 0.04);
+  /* default hidden state if something goes wrong */
+  opacity: 0;
+  pointer-events: none;
 }
 
-.l-feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-}
-
-.l-feature-highlight {
-  background: #fff;
-  border: 2px solid rgba(74, 139, 143, 0.25);
-}
-
-.l-feature-icon {
+.l-feature-card-carousel .l-feature-icon {
   font-size: 36px;
   margin-bottom: 16px;
   display: block;
 }
 
-.l-feature-card h3 {
+.l-feature-card-carousel h3 {
   font-size: 17px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 10px;
 }
 
-.l-feature-card p {
+.l-feature-card-carousel p {
   font-size: 13px;
   color: var(--muted);
   line-height: 1.65;
+}
+
+/* Positions based on diff */
+/* 0: Center (Active) */
+.card-pos-0 {
+  transform: translateX(0) scale(1.05);
+  z-index: 3;
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(74, 139, 143, 0.4);
+}
+
+/* 1: Right */
+.card-pos-1 {
+  transform: translateX(110%) scale(0.9);
+  z-index: 2;
+  opacity: 0.5;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* 2: Far Right Hidden */
+.card-pos-2 {
+  transform: translateX(220%) scale(0.8);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 3: Back Hidden */
+.card-pos-3 {
+  transform: translateX(0) scale(0.7);
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 4: Far Left Hidden */
+.card-pos-4 {
+  transform: translateX(-220%) scale(0.8);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 5: Left */
+.card-pos-5 {
+  transform: translateX(-110%) scale(0.9);
+  z-index: 2;
+  opacity: 0.5;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 /* About */
@@ -426,6 +481,7 @@
   z-index: 1;
   padding: 40px 60px;
   background: linear-gradient(135deg, rgba(74, 139, 143, 0.06) 0%, rgba(200, 98, 58, 0.04) 100%);
+  scroll-margin-top: 100px;
 }
 
 .l-about-inner {
@@ -733,8 +789,12 @@
     padding: 60px 30px;
   }
 
-  .l-features-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .l-features-carousel {
+    height: 380px;
+  }
+
+  .l-feature-card-carousel {
+    width: 260px;
   }
 
   .l-about {
@@ -765,8 +825,20 @@
     width: 100%;
   }
 
-  .l-features-grid {
-    grid-template-columns: 1fr;
+  .l-features-carousel {
+    height: 340px;
+  }
+
+  .l-feature-card-carousel {
+    width: 220px;
+  }
+
+  .card-pos-1 {
+    transform: translateX(85%) scale(0.85);
+  }
+
+  .card-pos-5 {
+    transform: translateX(-85%) scale(0.85);
   }
 
   .l-stats {
