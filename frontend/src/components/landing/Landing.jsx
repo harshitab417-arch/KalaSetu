@@ -1,11 +1,14 @@
 
 
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import "./Landing.css";
 import kalasetuLogo from "../../assets/kalasetu_logo.png";
 import cultureImg from "../../assets/culture.jpeg";
 import IntroAnimation from "./Introanimation";
+import TiltedCard from "../common/TiltedCard/TiltedCard";
+import ClickSpark from "../common/ClickSpark/ClickSpark";
 
 const artSymbols = ["🎨", "🪘", "🎭", "🌸", "🏺", "🪁", "🧵", "🪗", "🎋", "🌺", "🎐", "🧿", "🪔", "🥁", "🎻", "💫"];
 
@@ -92,21 +95,18 @@ function Landing() {
   const [introDone, setIntroDone] = useState(hasPlayedIntro);
   const [showTop, setShowTop] = useState(false);
   const [modal, setModal] = useState(null);
-  const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
+  const featuresRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: featuresRef,
+    offset: ["start 0.2", "end end"]
+  });
 
-  useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 300);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!introDone) return;
-    const timer = setInterval(() => {
-      setActiveFeatureIndex((prev) => (prev + 1) % featuresData.length);
-    }, 3500);
-    return () => clearInterval(timer);
-  }, [introDone]);
+  const xRaw = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
+  const x = useSpring(xRaw, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   const [symbols] = useState(() =>
     Array.from({ length: 18 }, (_, i) => ({
@@ -132,179 +132,203 @@ function Landing() {
   }
 
   return (
-    <div className="l-root">
-      {/* Floating background symbols */}
-      <div className="l-particles">
-        {symbols.map((s, i) => <FloatingSymbol key={i} {...s} />)}
-      </div>
-
-      {/* Navbar */}
-      <nav className="l-nav">
-        <div className="l-brand">
-          <img src={kalasetuLogo} alt="KalaSetu" className="l-brand-logo" />
-          <span className="l-brand-text">KalaSetu</span>
+    <ClickSpark
+      sparkColor="#4A8B8F"
+      sparkSize={12}
+      sparkRadius={18}
+      sparkCount={10}
+      duration={450}
+    >
+      <div className="l-root">
+        {/* Floating background symbols */}
+        <div className="l-particles">
+          {symbols.map((s, i) => <FloatingSymbol key={i} {...s} />)}
         </div>
-        <div className="l-nav-links">
-          <button className="l-nav-ghost" onClick={() => document.getElementById("about").scrollIntoView({ behavior: "smooth" })}>
-            About
-          </button>
-          <button className="l-nav-ghost" onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}>
-            Features
-          </button>
-          <button className="l-btn-outline" onClick={() => navigate("/signin")}>
-            Sign In
-          </button>
-          <button className="l-btn-solid" onClick={() => navigate("/signup")}>
-            Join Free →
-          </button>
-        </div>
-      </nav>
 
-      {/* Hero */}
-      <section className="l-hero">
-        <div className="l-hero-left">
-          <h3 className="l-hero-title">
-            Where <span className="l-accent">Art</span> Finds<br />
-            Its <span className="l-accent-2">Voice</span>
-          </h3>
-          <p className="l-hero-sub">
-            KalaSetu connects traditional artisans, NGOs, and culture lovers
-            across India — preserving heritage, one story at a time.
-          </p>
-          <div className="l-hero-actions">
-            <button className="l-cta-primary" onClick={() => navigate("/signup")}>
-              ✨ Create Free Account
-            </button>
-            <button className="l-cta-secondary" onClick={() => navigate("/signin")}>
-              Already a member? Sign in
-            </button>
+        {/* Navbar */}
+        <nav className="l-nav">
+          <div className="l-brand">
+            <img src={kalasetuLogo} alt="KalaSetu" className="l-brand-logo" />
+            <span className="l-brand-text">KalaSetu</span>
           </div>
-        </div>
-
-        <div className="l-hero-right">
-          <img src={cultureImg} alt="Indian Culture" className="l-culture-img" />
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="l-stats">
-        <div className="l-stat">
-          <div className="l-stat-num"><CountUp target={1200} suffix="+" /></div>
-          <div className="l-stat-label">Artisans</div>
-        </div>
-        <div className="l-stat-divider" />
-        <div className="l-stat">
-          <div className="l-stat-num"><CountUp target={340} suffix="+" /></div>
-          <div className="l-stat-label">NGOs</div>
-        </div>
-        <div className="l-stat-divider" />
-        <div className="l-stat">
-          <div className="l-stat-num"><CountUp target={28} suffix=" States" /></div>
-          <div className="l-stat-label">Covered</div>
-        </div>
-        <div className="l-stat-divider" />
-        <div className="l-stat">
-          <div className="l-stat-num"><CountUp target={5000} suffix="+" /></div>
-          <div className="l-stat-label">Posts Shared</div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="l-features">
-        <div className="l-section-tag">Why KalaSetu?</div>
-        <h2 className="l-section-title">Everything you need to<br />share your culture</h2>
-        <div className="l-features-carousel">
-          {featuresData.map((feature, index) => {
-            const diff = (index - activeFeatureIndex + featuresData.length) % featuresData.length;
-            return (
-              <div key={index} className={`l-feature-card-carousel card-pos-${diff}`}>
-                <div className="l-feature-icon">{feature.icon}</div>
-                <h3>{feature.title}</h3>
-                <p>{feature.text}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* About */}
-      <section id="about" className="l-about">
-        <div className="l-about-inner">
-          <div className="l-about-text">
-            <div className="l-section-tag">Our Mission</div>
-            <h2>Bridging tradition<br />with technology</h2>
-            <p>
-              India has over 3,000 traditional art forms — many on the edge of being forgotten.
-              KalaSetu was built to change that. We give artisans a digital stage, help NGOs
-              find the right partners, and invite everyone to celebrate India's living heritage.
-            </p>
-            <button className="l-cta-primary" onClick={() => navigate("/signup")}>
-              Join the Movement →
+          <div className="l-nav-links">
+            <button className="l-nav-ghost" onClick={() => document.getElementById("about").scrollIntoView({ behavior: "smooth" })}>
+              About
             </button>
-          </div>
-          <div className="l-about-cards">
-            <div className="l-about-card">
-              <span>🎨</span>
-              <h4>Empower Artisans</h4>
-              <p>Showcase skills, promote workshops, and build a digital following.</p>
-            </div>
-            <div className="l-about-card">
-              <span>🤝</span>
-              <h4>Connect NGOs</h4>
-              <p>Find talented artists, collaborate on initiatives, and amplify impact.</p>
-            </div>
-            <div className="l-about-card">
-              <span>🌏</span>
-              <h4>Preserve Heritage</h4>
-              <p>Every story shared keeps a tradition alive for the next generation.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {modal && <PolicyModal type={modal} onClose={() => setModal(null)} />}
-
-      {/* Scroll to Top */}
-      {showTop && (
-        <button className="l-scroll-top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll to top">
-          ▲
-        </button>
-      )}
-
-      {/* CTA Banner */}
-      <section className="l-cta-banner">
-        <div className="l-cta-banner-content">
-          <h2>Ready to share your culture?</h2>
-          <p>Join thousands of artisans and NGOs already on KalaSetu</p>
-          <div className="l-cta-banner-btns">
-            <button className="l-btn-white" onClick={() => navigate("/signup")}>
-              ✨ Create Free Account
+            <button className="l-nav-ghost" onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}>
+              Features
             </button>
-            <button className="l-btn-white-outline" onClick={() => navigate("/signin")}>
+            <button className="l-btn-outline" onClick={() => navigate("/signin")}>
               Sign In
             </button>
+            <button className="l-btn-solid" onClick={() => navigate("/signup")}>
+              Join Free →
+            </button>
           </div>
-        </div>
-      </section>
+        </nav>
 
-      {/* GitHub-Style Footer */}
-      <footer className="l-footer">
-        <div className="l-footer-inner">
-          <div className="l-footer-left">
-            <img src={kalasetuLogo} alt="KalaSetu" className="l-footer-logo" />
-            <span className="l-copyright">&copy; 2026 KalaSetu, Inc.</span>
+        {/* Hero */}
+        <section className="l-hero">
+          <div className="l-hero-left">
+            <h3 className="l-hero-title">
+              Where <span className="l-accent">Art</span> Finds<br />
+              Its <span className="l-accent-2">Voice</span>
+            </h3>
+            <p className="l-hero-sub">
+              KalaSetu connects traditional artisans, NGOs, and culture lovers
+              across India — preserving heritage, one story at a time.
+            </p>
+            <div className="l-hero-actions">
+              <button className="l-cta-primary" onClick={() => navigate("/signup")}>
+                ✨ Create Free Account
+              </button>
+              <button className="l-cta-secondary" onClick={() => navigate("/signin")}>
+                Already a member? Sign in
+              </button>
+            </div>
           </div>
-          <div className="l-footer-links">
-            <span className="l-footer-link" onClick={() => setModal("terms")}>Terms</span>
-            <span className="l-footer-link" onClick={() => setModal("privacy")}>Privacy</span>
-            <span className="l-footer-link" onClick={() => alert("Security details coming soon!")}>Security</span>
-            <span className="l-footer-link" onClick={() => alert("Status page coming soon!")}>Status</span>
-            <span className="l-footer-link" onClick={() => alert("Documentation coming soon!")}>Docs</span>
-            <span className="l-footer-link" onClick={() => alert("Support contact coming soon!")}>Contact</span>
+
+          <div className="l-hero-right">
+            <TiltedCard
+              imageSrc={cultureImg}
+              altText="Indian Culture"
+              captionText="KalaSetu"
+              containerHeight="400px"
+              containerWidth="100%"
+              imageHeight="400px"
+              imageWidth="100%"
+              rotateAmplitude={12}
+              scaleOnHover={1.05}
+              showMobileWarning={false}
+              showTooltip={true}
+            />
           </div>
-        </div>
-      </footer>
-    </div>
+        </section>
+
+        {/* Stats */}
+        <section className="l-stats">
+          <div className="l-stat">
+            <div className="l-stat-num"><CountUp target={1200} suffix="+" /></div>
+            <div className="l-stat-label">Artisans</div>
+          </div>
+          <div className="l-stat-divider" />
+          <div className="l-stat">
+            <div className="l-stat-num"><CountUp target={340} suffix="+" /></div>
+            <div className="l-stat-label">NGOs</div>
+          </div>
+          <div className="l-stat-divider" />
+          <div className="l-stat">
+            <div className="l-stat-num"><CountUp target={28} suffix=" States" /></div>
+            <div className="l-stat-label">Covered</div>
+          </div>
+          <div className="l-stat-divider" />
+          <div className="l-stat">
+            <div className="l-stat-num"><CountUp target={5000} suffix="+" /></div>
+            <div className="l-stat-label">Posts Shared</div>
+          </div>
+        </section>
+
+        {/* Features Scroll Section */}
+        <section id="features" ref={featuresRef} className="l-features-scroll-container">
+          <div className="l-features-sticky">
+            <div className="l-features-header">
+              <div className="l-section-tag">WHY KALASETU?</div>
+              <h2 className="l-section-title">Everything you need to<br />share your culture</h2>
+            </div>
+            
+            <div className="l-features-track-container">
+              <motion.div style={{ x }} className="l-features-track">
+                {featuresData.map((feature, index) => (
+                  <div key={index} className="l-feature-card">
+                    <div className="l-feature-icon">{feature.icon}</div>
+                    <h3>{feature.title}</h3>
+                    <p>{feature.text}</p>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* About */}
+        <section id="about" className="l-about">
+          <div className="l-about-inner">
+            <div className="l-about-text">
+              <div className="l-section-tag">Our Mission</div>
+              <h2>Bridging tradition<br />with technology</h2>
+              <p>
+                India has over 3,000 traditional art forms — many on the edge of being forgotten.
+                KalaSetu was built to change that. We give artisans a digital stage, help NGOs
+                find the right partners, and invite everyone to celebrate India's living heritage.
+              </p>
+              <button className="l-cta-primary" onClick={() => navigate("/signup")}>
+                Join the Movement →
+              </button>
+            </div>
+            <div className="l-about-cards">
+              <div className="l-about-card">
+                <span>🎨</span>
+                <h4>Empower Artisans</h4>
+                <p>Showcase skills, promote workshops, and build a digital following.</p>
+              </div>
+              <div className="l-about-card">
+                <span>🤝</span>
+                <h4>Connect NGOs</h4>
+                <p>Find talented artists, collaborate on initiatives, and amplify impact.</p>
+              </div>
+              <div className="l-about-card">
+                <span>🌏</span>
+                <h4>Preserve Heritage</h4>
+                <p>Every story shared keeps a tradition alive for the next generation.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {modal && <PolicyModal type={modal} onClose={() => setModal(null)} />}
+
+        {/* Scroll to Top */}
+        {showTop && (
+          <button className="l-scroll-top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Scroll to top">
+            ▲
+          </button>
+        )}
+
+        {/* CTA Banner */}
+        <section className="l-cta-banner">
+          <div className="l-cta-banner-content">
+            <h2>Ready to share your culture?</h2>
+            <p>Join thousands of artisans and NGOs already on KalaSetu</p>
+            <div className="l-cta-banner-btns">
+              <button className="l-btn-white" onClick={() => navigate("/signup")}>
+                ✨ Create Free Account
+              </button>
+              <button className="l-btn-white-outline" onClick={() => navigate("/signin")}>
+                Sign In
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* GitHub-Style Footer */}
+        <footer className="l-footer">
+          <div className="l-footer-inner">
+            <div className="l-footer-left">
+              <img src={kalasetuLogo} alt="KalaSetu" className="l-footer-logo" />
+              <span className="l-copyright">&copy; 2026 KalaSetu, Inc.</span>
+            </div>
+            <div className="l-footer-links">
+              <span className="l-footer-link" onClick={() => setModal("terms")}>Terms</span>
+              <span className="l-footer-link" onClick={() => setModal("privacy")}>Privacy</span>
+              <span className="l-footer-link" onClick={() => alert("Security details coming soon!")}>Security</span>
+              <span className="l-footer-link" onClick={() => alert("Status page coming soon!")}>Status</span>
+              <span className="l-footer-link" onClick={() => alert("Documentation coming soon!")}>Docs</span>
+              <span className="l-footer-link" onClick={() => alert("Support contact coming soon!")}>Contact</span>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </ClickSpark>
   );
 }
 
