@@ -84,8 +84,8 @@ const featuresData = [
   { icon: "⭐", title: "Free to Join", text: "Sign up as a user, then upgrade to Artisan or NGO for free. No hidden fees, ever." }
 ];
 
-// track if intro has played in this SPA session (resets on hard reload)
-let hasPlayedIntro = false;
+// track if intro has played in this session to avoid re-playing on sign out/navigation
+let hasPlayedIntro = typeof window !== "undefined" ? !!sessionStorage.getItem("ks_intro_played") : false;
 
 function Landing() {
   const navigate = useNavigate();
@@ -126,6 +126,7 @@ function Landing() {
   if (!introDone) {
     return <IntroAnimation onDone={() => {
       hasPlayedIntro = true;
+      sessionStorage.setItem("ks_intro_played", "true");
       setIntroDone(true);
     }} />;
   }
