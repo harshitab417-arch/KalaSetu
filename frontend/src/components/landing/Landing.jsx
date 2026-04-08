@@ -75,6 +75,15 @@ function PolicyModal({ type, onClose }) {
   );
 }
 
+const featuresData = [
+  { icon: "🎨", title: "Showcase Your Art", text: "Create a rich profile with your skills, location, and cultural story. Let the world discover your craft." },
+  { icon: "🤝", title: "Connect & Collaborate", text: "Message artisans, partner with NGOs, and build meaningful relationships that grow your reach." },
+  { icon: "📢", title: "Promote Events", text: "Announce workshops, cultural events, and exhibitions to a passionate community that cares." },
+  { icon: "🔍", title: "Discover Creators", text: "Search artisans and NGOs by skill, location, or art form. Find inspiration from across India." },
+  { icon: "🌏", title: "Preserve Heritage", text: "Every post, every story, every connection helps keep India's traditional art forms alive and thriving." },
+  { icon: "⭐", title: "Free to Join", text: "Sign up as a user, then upgrade to Artisan or NGO for free. No hidden fees, ever." }
+];
+
 // track if intro has played in this SPA session (resets on hard reload)
 let hasPlayedIntro = false;
 
@@ -83,12 +92,21 @@ function Landing() {
   const [introDone, setIntroDone] = useState(hasPlayedIntro);
   const [showTop, setShowTop] = useState(false);
   const [modal, setModal] = useState(null);
+  const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 300);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!introDone) return;
+    const timer = setInterval(() => {
+      setActiveFeatureIndex((prev) => (prev + 1) % featuresData.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [introDone]);
 
   const [symbols] = useState(() =>
     Array.from({ length: 18 }, (_, i) => ({
@@ -194,37 +212,17 @@ function Landing() {
       <section id="features" className="l-features">
         <div className="l-section-tag">Why KalaSetu?</div>
         <h2 className="l-section-title">Everything you need to<br />share your culture</h2>
-        <div className="l-features-grid">
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">🎨</div>
-            <h3>Showcase Your Art</h3>
-            <p>Create a rich profile with your skills, location, and cultural story. Let the world discover your craft.</p>
-          </div>
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">🤝</div>
-            <h3>Connect & Collaborate</h3>
-            <p>Message artisans, partner with NGOs, and build meaningful relationships that grow your reach.</p>
-          </div>
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">📢</div>
-            <h3>Promote Events</h3>
-            <p>Announce workshops, cultural events, and exhibitions to a passionate community that cares.</p>
-          </div>
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">🔍</div>
-            <h3>Discover Creators</h3>
-            <p>Search artisans and NGOs by skill, location, or art form. Find inspiration from across India.</p>
-          </div>
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">🌏</div>
-            <h3>Preserve Heritage</h3>
-            <p>Every post, every story, every connection helps keep India's traditional art forms alive and thriving.</p>
-          </div>
-          <div className="l-feature-card l-feature-highlight">
-            <div className="l-feature-icon">⭐</div>
-            <h3>Free to Join</h3>
-            <p>Sign up as a user, then upgrade to Artisan or NGO for free. No hidden fees, ever.</p>
-          </div>
+        <div className="l-features-carousel">
+          {featuresData.map((feature, index) => {
+            const diff = (index - activeFeatureIndex + featuresData.length) % featuresData.length;
+            return (
+              <div key={index} className={`l-feature-card-carousel card-pos-${diff}`}>
+                <div className="l-feature-icon">{feature.icon}</div>
+                <h3>{feature.title}</h3>
+                <p>{feature.text}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 

@@ -46,6 +46,8 @@
 .prof-sidebar-col {
   display: flex;
   flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
   gap: 16px;
   position: sticky;
   top: 104px;
@@ -67,13 +69,11 @@
   inset: 0;
   background:
     linear-gradient(140deg, rgba(247, 243, 237, 0.02), rgba(247, 243, 237, 0)),
-    repeating-linear-gradient(
-      135deg,
+    repeating-linear-gradient(135deg,
       rgba(255, 255, 255, 0.08) 0,
       rgba(255, 255, 255, 0.08) 2px,
       transparent 2px,
-      transparent 18px
-    );
+      transparent 18px);
   pointer-events: none;
 }
 
@@ -177,9 +177,11 @@
   .prof-name-row {
     justify-content: center;
   }
+
   .prof-name-row h2 {
     font-size: 26px;
   }
+
   .prof-hero-main {
     padding-top: 12px;
     width: 100%;
@@ -267,7 +269,9 @@
 }
 
 @media (max-width: 768px) {
-  .prof-meta-row, .prof-skill-tags {
+
+  .prof-meta-row,
+  .prof-skill-tags {
     justify-content: center;
   }
 }
@@ -334,6 +338,7 @@
     justify-content: center;
     width: 100%;
   }
+
   .prof-hero-actions button {
     flex: 1;
     justify-content: center;
@@ -423,16 +428,8 @@
 }
 
 @media (max-width: 1024px) {
-  .prof-body {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
   .prof-sidebar {
-    order: 2;
     position: static;
-  }
-  .prof-posts-section {
-    order: 1;
   }
 }
 
@@ -506,6 +503,8 @@
 .prof-sidebar {
   display: flex;
   flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
   gap: 18px;
   position: static;
 }
@@ -518,7 +517,7 @@
 }
 
 .prof-sidebar .prof-card {
-  padding: 0 0 18px;
+  padding: 0 0 10px;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -535,6 +534,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: 0;
   margin-bottom: 14px;
   color: var(--text-strong);
   font-size: 18px;
@@ -544,6 +544,7 @@
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.8;
+  margin-bottom: 0;
 }
 
 .prof-details {
@@ -605,6 +606,7 @@
     justify-content: space-between;
     margin-bottom: 20px;
   }
+
   .prof-tab {
     padding: 14px 10px;
     font-size: 11px;
@@ -1024,7 +1026,7 @@
   cursor: pointer;
 }
 
-.prof-more-dropdown button + button {
+.prof-more-dropdown button+button {
   border-top: 1px solid rgba(47, 111, 109, 0.08);
 }
 
@@ -1296,12 +1298,14 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .prof-stat-clickable:hover {
   background: linear-gradient(180deg, rgba(167, 196, 188, 0.3), rgba(167, 196, 188, 0.15)) !important;
   border-color: rgba(47, 111, 109, 0.22) !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(47, 111, 109, 0.12) !important;
 }
+
 .prof-stat-clickable:hover .prof-stat-icon {
   background: rgba(47, 111, 109, 0.18);
 }
@@ -1367,7 +1371,7 @@
   object-fit: cover;
   flex-shrink: 0;
   border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* ── Report form inside modal ── */
@@ -1426,12 +1430,13 @@
    GLOBAL MOBILE OPTIMIZATION (Responsive Overrides)
    ======================================================== */
 @media (max-width: 768px) {
+
   /* Fix layout arrays and remove overflow */
   .prof-container {
     padding: 16px 12px 24px;
     overflow-x: hidden;
   }
-  
+
   /* Scale down profile image */
   .prof-avatar-img,
   .prof-avatar-initials {
@@ -1487,20 +1492,20 @@
     justify-content: center;
     gap: 8px;
   }
-  
+
   .prof-meta-row span,
   .prof-skill-pill {
     padding: 8px 12px;
     font-size: 11px;
   }
-  
+
   /* Make stats section a clean 2-column layout */
   .prof-stats-row {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
     margin-top: 20px;
   }
-  
+
   .prof-stat-card {
     padding: 16px;
     align-items: center;
@@ -1512,27 +1517,28 @@
     width: 100%;
     margin-bottom: 12px;
   }
-  
+
   .prof-post-media {
     height: 180px;
   }
 }
 
 @media (max-width: 480px) {
+
   /* Extra optimizations for very small phone screens */
   .prof-hero-body {
     margin-top: -36px !important;
   }
-  
+
   .prof-cover {
     min-height: 130px;
     padding: 16px;
   }
-  
+
   .prof-posts-title {
     font-size: 20px !important;
   }
-  
+
   /* Compress touch areas for tiny screens */
   .prof-tab {
     padding: 14px 6px;
