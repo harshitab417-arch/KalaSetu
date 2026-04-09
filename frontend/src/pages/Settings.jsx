@@ -71,12 +71,30 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
   };
 
   const applyCrop = async () => {
+    if (!rawImage) return;
+
+    let area = croppedPx;
+    if (!area) {
+      const img = await new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.src = rawImage;
+      });
+      const side = Math.min(img.naturalWidth, img.naturalHeight);
+      area = {
+        x: Math.round((img.naturalWidth - side) / 2),
+        y: Math.round((img.naturalHeight - side) / 2),
+        width: side,
+        height: side,
+      };
+    }
+
     try {
-      const base64 = await getCroppedImg(rawImage, croppedPx);
+      const base64 = await getCroppedImg(rawImage, area);
       setPreviewPhoto(base64);
       setRawImage(null);
     } catch (err) {
-      setError("Crop failed.");
+      setError("Crop failed. Please try again.");
     }
   };
 
@@ -264,13 +282,34 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
       {rawImage && (
         <div className="settings-cropper-overlay">
           <div className="settings-cropper-modal">
-            <h4>Crop Photo</h4>
+            <h4>Crop Profile Picture</h4>
             <div className="cropper-container">
-              <Cropper image={rawImage} crop={crop} zoom={zoom} aspect={1} cropShape="round" onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} />
+              <Cropper 
+                image={rawImage} 
+                crop={crop} 
+                zoom={zoom} 
+                aspect={1} 
+                cropShape="round" 
+                showGrid={false}
+                onCropChange={setCrop} 
+                onZoomChange={setZoom} 
+                onCropComplete={onCropComplete} 
+              />
+            </div>
+            <div className="settings-cropper-controls">
+              <span>Zoom</span>
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.1}
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+              />
             </div>
             <div className="cropper-actions">
               <button type="button" onClick={() => setRawImage(null)}>Cancel</button>
-              <button type="button" className="apply-btn" onClick={applyCrop}>Apply</button>
+              <button type="button" className="apply-btn" onClick={applyCrop}>Apply Crop</button>
             </div>
           </div>
         </div>
@@ -315,6 +354,11 @@ function SecurityTab({ token }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
@@ -349,15 +393,51 @@ function SecurityTab({ token }) {
       <form onSubmit={handleSubmit(onSubmit)} className="settings-security-form">
         <div className="settings-field">
           <label>Current Password</label>
-          <input type="password" {...register("oldPassword", { required: true })} />
+          <div className="settings-password-wrapper">
+            <input 
+              type={showOld ? "text" : "password"} 
+              {...register("oldPassword", { required: true })} 
+            />
+            <button 
+              type="button" 
+              className="password-toggle-trigger" 
+              onClick={() => setShowOld(!showOld)}
+            >
+              <i className={`fi ${showOld ? "fi-sr-eye-crossed" : "fi-sr-eye"}`} />
+            </button>
+          </div>
         </div>
         <div className="settings-field">
           <label>New Password</label>
-          <input type="password" {...register("newPassword", { required: true, minLength: 6 })} />
+          <div className="settings-password-wrapper">
+            <input 
+              type={showNew ? "text" : "password"} 
+              {...register("newPassword", { required: true, minLength: 6 })} 
+            />
+            <button 
+              type="button" 
+              className="password-toggle-trigger" 
+              onClick={() => setShowNew(!showNew)}
+            >
+              <i className={`fi ${showNew ? "fi-sr-eye-crossed" : "fi-sr-eye"}`} />
+            </button>
+          </div>
         </div>
         <div className="settings-field">
           <label>Confirm New Password</label>
-          <input type="password" {...register("confirmPassword", { required: true })} />
+          <div className="settings-password-wrapper">
+            <input 
+              type={showConfirm ? "text" : "password"} 
+              {...register("confirmPassword", { required: true })} 
+            />
+            <button 
+              type="button" 
+              className="password-toggle-trigger" 
+              onClick={() => setShowConfirm(!showConfirm)}
+            >
+              <i className={`fi ${showConfirm ? "fi-sr-eye-crossed" : "fi-sr-eye"}`} />
+            </button>
+          </div>
         </div>
         <button type="submit" className="settings-primary-btn" disabled={loading}>
           {loading ? "Updating..." : "Update Password"}
@@ -414,6 +494,7 @@ function NotificationTab({ profile, token, onUpdate }) {
 
 function AccountTab({ token }) {
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -440,7 +521,21 @@ function AccountTab({ token }) {
 
       <div className="settings-field">
         <label>Password</label>
-        <input type="password" placeholder="Confirm your password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="settings-password-wrapper">
+          <input 
+            type={showPass ? "text" : "password"} 
+            placeholder="Confirm your password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+          <button 
+            type="button" 
+            className="password-toggle-trigger" 
+            onClick={() => setShowPass(!showPass)}
+          >
+            <i className={`fi ${showPass ? "fi-sr-eye-crossed" : "fi-sr-eye"}`} />
+          </button>
+        </div>
       </div>
       <div className="settings-field">
         <label>Type <strong>DELETE</strong> to confirm</label>

@@ -432,6 +432,45 @@
   border: none;
 }
 
+.settings-cropper-controls {
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings-cropper-controls span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 45px;
+}
+
+.settings-cropper-controls input[type="range"] {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  appearance: none;
+  outline: none;
+}
+
+.settings-cropper-controls input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--brand-700);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.settings-cropper-controls input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
 /* ── Mobile ─────────────────────────────────────────────────────────── */
 @media (max-width: 860px) {
   .settings-layout {
@@ -556,4 +595,41 @@
 .settings-tab-content button.settings-primary-btn,
 .settings-tab-content button.settings-danger-btn {
   margin-top: 32px;
+} 
+
+/* ── Password Visibility Toggle ─────────────────────────────────────── */
+.settings-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settings-password-wrapper input {
+  width: 100%;
+  padding-right: 48px !important;
+}
+
+.password-toggle-trigger {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+
+.password-toggle-trigger:hover {
+  color: var(--brand-700);
+  background: rgba(47, 111, 109, 0.05);
+}
+
+.password-toggle-trigger i {
+  font-size: 16px;
+  display: flex;
 }
