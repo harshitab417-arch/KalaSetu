@@ -707,6 +707,14 @@
   gap: 14px;
 }
 
+.prof-posts-grid .post-card .post-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @media (max-width: 860px) {
   .prof-posts-grid {
     grid-template-columns: repeat(2, 1fr);

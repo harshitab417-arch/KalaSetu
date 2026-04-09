@@ -87,8 +87,8 @@ const featuresData = [
   { icon: "⭐", title: "Free to Join", text: "Sign up as a user, then upgrade to Artisan or NGO for free. No hidden fees, ever." }
 ];
 
-// track if intro has played in this session to avoid re-playing on sign out/navigation
-let hasPlayedIntro = typeof window !== "undefined" ? !!sessionStorage.getItem("ks_intro_played") : false;
+// Intro animation plays on every page load/reload
+let hasPlayedIntro = false;
 
 function Landing() {
   const navigate = useNavigate();
@@ -96,6 +96,12 @@ function Landing() {
   const [showTop, setShowTop] = useState(false);
   const [modal, setModal] = useState(null);
   const featuresRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const { scrollYProgress } = useScroll({
     target: featuresRef,
     offset: ["start 0.2", "end end"]
@@ -126,7 +132,6 @@ function Landing() {
   if (!introDone) {
     return <IntroAnimation onDone={() => {
       hasPlayedIntro = true;
-      sessionStorage.setItem("ks_intro_played", "true");
       setIntroDone(true);
     }} />;
   }
@@ -155,7 +160,7 @@ function Landing() {
             <button className="l-nav-ghost" onClick={() => document.getElementById("about").scrollIntoView({ behavior: "smooth" })}>
               About
             </button>
-            <button className="l-nav-ghost" onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}>
+            <button className="l-nav-ghost" onClick={() => { const el = document.getElementById("features"); if (el) { const top = el.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top, behavior: "smooth" }); } }}>
               Features
             </button>
             <button className="l-btn-outline" onClick={() => navigate("/signin")}>
@@ -261,7 +266,7 @@ function Landing() {
                 KalaSetu was built to change that. We give artisans a digital stage, help NGOs
                 find the right partners, and invite everyone to celebrate India's living heritage.
               </p>
-              <button className="l-cta-primary" onClick={() => navigate("/signup")}>
+              <button className="l-cta-primary" onClick={() => { window.scrollTo(0, 0); navigate("/signup"); }}>
                 Join the Movement →
               </button>
             </div>
@@ -300,7 +305,7 @@ function Landing() {
             <h2>Ready to share your culture?</h2>
             <p>Join thousands of artisans and NGOs already on KalaSetu</p>
             <div className="l-cta-banner-btns">
-              <button className="l-btn-white" onClick={() => navigate("/signup")}>
+              <button className="l-btn-white" onClick={() => { window.scrollTo(0, 0); navigate("/signup"); }}>
                 ✨ Create Free Account
               </button>
               <button className="l-btn-white-outline" onClick={() => navigate("/signin")}>

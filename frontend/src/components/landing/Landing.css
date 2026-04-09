@@ -309,7 +309,8 @@
   justify-content: center;
   align-items: center;
   gap: 0;
-  margin: 15px 40px 10px; /* Reduced from 40px */
+  margin: 15px 40px 10px;
+  /* Reduced from 40px */
   background: var(--teal);
   border-radius: 20px;
   padding: 15px 10px;
@@ -346,15 +347,20 @@
 /* Features */
 /* Features Sticky Scroll */
 .l-features-scroll-container {
-  height: 110vh; /* Extremely tight scroll runway */
+  height: 160vh;
+  /* Expanded to give more breathing room after features */
   position: relative;
   background: var(--cream);
+  scroll-margin-top: 80px;
+  /* offset for fixed navbar */
 }
 
 .l-features-sticky {
   position: sticky;
-  top: 80px; /* Keep it near top but sticky */
-  height: auto; /* Let content determine height */
+  top: 80px;
+  /* Keep it near top but sticky */
+  height: auto;
+  /* Let content determine height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -364,7 +370,8 @@
 
 .l-features-header {
   text-align: center;
-  margin-bottom: 10px; /* Minimized margin */
+  margin-bottom: 10px;
+  /* Minimized margin */
   position: relative;
   z-index: 2;
 }
@@ -411,7 +418,8 @@
   flex-shrink: 0;
   background: #fff;
   border-radius: 20px;
-  padding: 24px ; /* Reduced from 40px 32px */
+  padding: 24px;
+  /* Reduced from 40px 32px */
   text-align: left;
   border: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
@@ -425,17 +433,21 @@
 }
 
 .l-feature-card .l-feature-icon {
-  font-size: 34px; /* Reduced from 42px */
-  margin-bottom: 12px; /* Reduced from 24px */
+  font-size: 34px;
+  /* Reduced from 42px */
+  margin-bottom: 12px;
+  /* Reduced from 24px */
   display: block;
 }
 
 .l-feature-card h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 20px; /* Reduced from 22px */
+  font-size: 20px;
+  /* Reduced from 22px */
   font-weight: 700;
   color: var(--ink);
-  margin-bottom: 8px; /* Reduced from 14px */
+  margin-bottom: 8px;
+  /* Reduced from 14px */
 }
 
 .l-feature-card p {
@@ -451,7 +463,8 @@
   padding: 40px 60px;
   background: linear-gradient(135deg, rgba(74, 139, 143, 0.06) 0%, rgba(200, 98, 58, 0.04) 100%);
   scroll-margin-top: 100px;
-  margin-top: -280px; /* Reduced by another 100px as requested */
+  margin-top: -500px;
+  /* Removed negative margin to prevent overlap with features */
 }
 
 .l-about-inner {

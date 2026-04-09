@@ -41,6 +41,7 @@ export function PostCard({ post, currentUser, onLike, onDislike, onRepost, onSho
   const [showShareModal, setShowShareModal] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showFullPost, setShowFullPost] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [shareUsers, setShareUsers] = useState([]);
   const [shareSearch, setShareSearch] = useState("");
   const [sentTo, setSentTo] = useState([]);
@@ -131,6 +132,18 @@ export function PostCard({ post, currentUser, onLike, onDislike, onRepost, onSho
     return name.includes(shareSearch.toLowerCase()) && p.user?._id !== currentUser?._id;
   });
 
+  // Fetch comments when opening modal on Explore/Profile pages
+  useEffect(() => {
+    if (showFullPost && useModalForComments && comments.length === 0) {
+      setLoadingComments(true);
+      axios
+        .get(`${API}/posts/${post._id}/comments`)
+        .then((res) => setComments(res.data))
+        .catch(() => setComments([]))
+        .finally(() => setLoadingComments(false));
+    }
+  }, [showFullPost, useModalForComments, post._id, comments.length]);
+
   return (
     <div className="post-card">
       {/* Header — Always at the top */}
@@ -169,7 +182,31 @@ export function PostCard({ post, currentUser, onLike, onDislike, onRepost, onSho
 
       <div className="post-body">
         <h3 className="post-title">{post.title}</h3>
-        <p className="post-content">{post.content}</p>
+        <p className="post-content">
+          {(!isExpanded && post.content?.length > (useModalForComments ? 80 : 150)) ? (
+            <>
+              {post.content.slice(0, (useModalForComments ? 80 : 150))}...{" "}
+              <span className="read-more-btn" onClick={(e) => {
+                e.stopPropagation();
+                if (useModalForComments) {
+                  setShowFullPost(true);
+                } else {
+                  setIsExpanded(true);
+                }
+              }}>Read more</span>
+            </>
+          ) : (
+            <>
+              {post.content}
+              {isExpanded && (
+                <span className="read-more-btn" onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(false);
+                }}> Show less</span>
+              )}
+            </>
+          )}
+        </p>
 
         {post.tags?.length > 0 && (
           <div className="post-tags">
