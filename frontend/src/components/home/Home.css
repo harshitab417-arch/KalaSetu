@@ -475,12 +475,25 @@
 /* Content preview */
 .post-content {
   color: #444;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 13.5px;
+  line-height: 1.55;
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 4px;
+}
+
+.read-more-btn {
+  color: var(--home-muted);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
+  color: var(--home-green-700);
 }
 
 /* Tags */
