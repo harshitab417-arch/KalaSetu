@@ -2,7 +2,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import "./Landing.css";
 import kalasetuLogo from "../../assets/kalasetu_logo.png";
 import cultureImg from "../../assets/culture.jpeg";
@@ -104,15 +104,13 @@ function Landing() {
   }, []);
   const { scrollYProgress } = useScroll({
     target: featuresRef,
-    offset: ["start 0.2", "end end"]
+    offset: ["start start", "end end"]
   });
 
-  const xRaw = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const x = useSpring(xRaw, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  // Direct transform — no spring so it tracks scroll 1:1 without jitter
+  // Use [0.05, 0.95] input range so animation is fully done before sticky exits,
+  // avoiding dead whitespace zones at start and end
+  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-48%"]);
 
   const [symbols] = useState(() =>
     Array.from({ length: 18 }, (_, i) => ({
@@ -244,11 +242,27 @@ function Landing() {
             <div className="l-features-track-container">
               <motion.div style={{ x }} className="l-features-track">
                 {featuresData.map((feature, index) => (
-                  <div key={index} className="l-feature-card">
+                  <motion.div
+                    key={index}
+                    className="l-feature-card"
+                    initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: index * 0.08,
+                      ease: [0.23, 1, 0.32, 1]
+                    }}
+                    whileHover={{
+                      y: -8,
+                      boxShadow: "0 16px 40px rgba(0,0,0,0.1)",
+                      borderColor: "rgba(74,139,143,0.35)"
+                    }}
+                  >
                     <div className="l-feature-icon">{feature.icon}</div>
                     <h3>{feature.title}</h3>
                     <p>{feature.text}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </motion.div>
             </div>
