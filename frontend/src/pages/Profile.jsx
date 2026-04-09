@@ -212,7 +212,7 @@ function Profile() {
       return;
     }
 
-    navigate("/edit-profile");
+    navigate("/settings?tab=profile");
   };
 
   const handleMessageClick = () => {
@@ -481,7 +481,7 @@ function Profile() {
             <p>Complete your profile to add your location, skills, story, and cultural focus.</p>
             <button
               className="prof-primary-btn"
-              onClick={() => navigate(currentUser?.role === "user" ? "/register" : "/edit-profile")}
+              onClick={() => navigate(currentUser?.role === "user" ? "/register" : "/settings?tab=profile")}
             >
               {currentUser?.role === "user" ? "Register as Artisan / NGO" : "Complete Profile"}
             </button>
