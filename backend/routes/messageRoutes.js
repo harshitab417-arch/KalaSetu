@@ -18,7 +18,7 @@ async function canSendMessage(senderId, receiverId) {
   }
 
   // Optimize: Fetch Block status, Profile privacy, and User follower data concurrently!
-  const [block, receiverProfile, receiver] = await Promise.all([
+  const [block, receiverProfile, receiver, sender] = await Promise.all([
     Block.findOne({
       $or: [
         { blocker: senderId, blocked: receiverId },
@@ -26,7 +26,8 @@ async function canSendMessage(senderId, receiverId) {
       ],
     }).lean(),
     Profile.findOne({ user: receiverId }).lean(),
-    User.findById(receiverId).select("followers followRequests").lean()
+    User.findById(receiverId).select("followers followRequests role").lean(),
+    User.findById(senderId).select("role").lean()
   ]);
 
   const isBlocked = !!block;
@@ -37,7 +38,12 @@ async function canSendMessage(senderId, receiverId) {
     return { allowed: false, reason: iBlockedThem ? "you_blocked" : "unavailable" };
   }
 
-  if (!receiver) return { allowed: false, reason: "not_found" };
+  if (!receiver || !sender) return { allowed: false, reason: "not_found" };
+
+  // Allow artisan/ngo to message users without following
+  if (receiver.role === "user" && (sender.role === "artisan" || sender.role === "ngo")) {
+    return { allowed: true };
+  }
 
   const isFollower = receiver.followers.some(
     (f) => f.toString() === String(senderId)

@@ -638,7 +638,7 @@ function Profile() {
                     Edit Profile
                   </button>
                 )}
-                {currentUser && !isOwn && !isBlocked && (
+                {currentUser && !isOwn && !isBlocked && profileUser?.role !== "user" && (
                   <div className="prof-more-wrap" style={{ position: "relative" }}>
                     <button
                       className={`prof-primary-btn ${following ? "prof-following-btn" : requested ? "prof-requested-btn" : ""}`}
