@@ -45,6 +45,10 @@ router.put("/:userId/follow", requireAuth, async (req, res, next) => {
     const me = await User.findById(req.user.id);
     if (!target || !me) return res.status(404).json({ message: "User not found" });
 
+    if (target.role === "user") {
+      return res.status(400).json({ message: "Members cannot be followed" });
+    }
+
     const targetProfile = await Profile.findOne({ user: target._id });
     const isPrivate = targetProfile?.isPrivate || false;
 

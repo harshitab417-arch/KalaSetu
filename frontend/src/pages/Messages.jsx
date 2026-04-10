@@ -640,6 +640,8 @@ function Messages() {
                       ? "You have blocked this user. Unblock them to send messages."
                       : messagingBlockReason === "messaging_unavailable" || messagingBlockReason === "unavailable"
                       ? "Messaging is unavailable with this user."
+                      : activeUser?.role === "user"
+                      ? "Messaging is not available."
                       : "Follow this user to send them a message."}
                   </span>
                 </div>
