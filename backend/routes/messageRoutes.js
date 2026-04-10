@@ -3,7 +3,7 @@ import { Message } from "../models/Message.js";
 import { User } from "../models/User.js";
 import { Profile } from "../models/Profile.js";
 import { Block } from "../models/Block.js";
-import { requireAuth, requireRole } from "../middleware/authMiddleware.js";
+import { requireAuth } from "../middleware/authMiddleware.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
 import { Notification } from "../models/Notification.js";
 import { uploadLimiter } from "../middleware/rateLimitMiddleware.js";
@@ -37,12 +37,6 @@ async function canSendMessage(senderId, receiverId) {
     return { allowed: false, reason: iBlockedThem ? "you_blocked" : "unavailable" };
   }
 
-  // Public account — anyone can message
-  if (!receiverProfile || !receiverProfile.isPrivate) {
-    return { allowed: true };
-  }
-
-  // Private account — sender must be an approved follower
   if (!receiver) return { allowed: false, reason: "not_found" };
 
   const isFollower = receiver.followers.some(
@@ -60,7 +54,7 @@ async function canSendMessage(senderId, receiverId) {
 }
 
 // ─── GET conversations (exclude conversations with blocked users) ──────────────
-router.get("/conversations", requireAuth, requireRole, async (req, res, next) => {
+router.get("/conversations", requireAuth, async (req, res, next) => {
   try {
     const mongoose = (await import("mongoose")).default;
     const userId = req.user.id;
@@ -164,7 +158,7 @@ router.get("/conversations", requireAuth, requireRole, async (req, res, next) =>
 });
 
 // ─── GET messages between two users (enforce block check) ─────────────────────
-router.get("/:userId", requireAuth, requireRole, async (req, res, next) => {
+router.get("/:userId", requireAuth, async (req, res, next) => {
   try {
     // Block guard — if either side has blocked, deny reading history too
     const block = await Block.findOne({
@@ -240,7 +234,7 @@ router.get("/can-message/:userId", requireAuth, async (req, res, next) => {
 });
 
 // ─── SEND message ─────────────────────────────────────────────────────────────────
-router.post("/", requireAuth, requireRole, uploadLimiter, validateImage("image"), async (req, res, next) => {
+router.post("/", requireAuth, uploadLimiter, validateImage("image"), async (req, res, next) => {
   try {
     const { receiverId, text, replyTo, sharedPostId, image } = req.body;
 
@@ -344,7 +338,7 @@ router.delete("/:messageId", requireAuth, async (req, res, next) => {
 });
 
 // ─── CLEAR chat for current user only ─────────────────────────────────────────
-router.delete("/clear/:partnerId", requireAuth, requireRole, async (req, res, next) => {
+router.delete("/clear/:partnerId", requireAuth, async (req, res, next) => {
   try {
     const userId = req.user.id;
     const partnerId = req.params.partnerId;
