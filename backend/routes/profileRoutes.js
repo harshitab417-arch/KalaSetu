@@ -311,7 +311,16 @@ router.get("/:userId", async (req, res, next) => {
       "user",
       "username fullName role email createdAt"
     );
-    if (!profile) return res.status(404).json({ message: "Profile not found" });
+
+    if (!profile) {
+      // Check if the user exists even if they don't have a profile record
+      const user = await User.findById(req.params.userId).select("username fullName role email createdAt");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      // Return a basic profile object for standard members
+      return res.json({ user });
+    }
+
     res.json(profile);
   } catch (err) {
     next(err);

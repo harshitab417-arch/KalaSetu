@@ -15,6 +15,7 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [saveStatus, setSaveStatus] = useState("");
   const [previewPhoto, setPreviewPhoto] = useState(profile?.photo || "");
   const [rawImage, setRawImage] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -93,6 +94,7 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
       const base64 = await getCroppedImg(rawImage, area);
       setPreviewPhoto(base64);
       setRawImage(null);
+      setSaveStatus("");
     } catch (err) {
       setError("Crop failed. Please try again.");
     }
@@ -110,42 +112,115 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
       
       const res = await axios.post(`${API}/profiles`, {
         ...data,
+        age: Number(data.age),
         skills: finalSkills.join(", "),
         displayName: selectedRole === "NGO" ? data.organizationName : data.name,
         photo: previewPhoto,
       }, { headers: { Authorization: `Bearer ${token}` } });
       setSuccess("Profile updated successfully!");
+      setSaveStatus("Saved!");
       onUpdate(res.data);
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Update failed.");
+      setSaveStatus("");
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    const subscription = watch(() => {
+      setSaveStatus("");
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   if (isRegularUser) {
     return (
       <div className="settings-tab-content">
         <h3 className="settings-tab-title">Profile Information</h3>
-        <p className="settings-tab-desc">Your basic account details.</p>
-        <div className="settings-info-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div className="settings-field">
-            <label>Full Name</label>
-            <div className="settings-read-only-box">{currentUser?.fullName}</div>
+        <p className="settings-tab-desc">Update your public identity details.</p>
+
+        {error && <div className="settings-error-msg">{error}</div>}
+        {success && <div className="settings-success-msg">{success}</div>}
+
+        <form onSubmit={handleSubmit(async () => {
+          setLoading(true);
+          setError("");
+          try {
+            const res = await axios.post(`${API}/profiles`, {
+              photo: previewPhoto,
+            }, { headers: { Authorization: `Bearer ${token}` } });
+            setSuccess("Profile photo updated successfully!");
+            setSaveStatus("Saved!");
+            onUpdate(res.data);
+            setTimeout(() => setSuccess(""), 3000);
+          } catch (err) {
+            setError(err.response?.data?.message || "Update failed.");
+            setSaveStatus("");
+          }
+          setLoading(false);
+        })} className="settings-profile-form">
+
+          <div className="settings-photo-section">
+            <div className="settings-photo-preview">
+              {previewPhoto ? <img src={previewPhoto} alt="Profile" /> : <div className="photo-placeholder">{currentUser?.username?.[0]}</div>}
+            </div>
+            <div className="settings-photo-actions">
+              <input type="file" id="p-upload" hidden accept="image/*" onChange={handleFileChange} />
+              <label htmlFor="p-upload" className="settings-upload-btn">Change Photo</label>
+              {previewPhoto && (
+                <button type="button" className="settings-remove-btn" onClick={() => { setPreviewPhoto(""); setSaveStatus(""); }}>
+                  Remove
+                </button>
+              )}
+            </div>
           </div>
-          <div className="settings-field">
-            <label>Username</label>
-            <div className="settings-read-only-box">@{currentUser?.username}</div>
+
+          {rawImage && (
+            <div className="settings-cropper-overlay">
+              <div className="settings-cropper-modal">
+                <h4>Adjust Photo</h4>
+                <div className="cropper-container">
+                  <Cropper 
+                    image={rawImage} 
+                    crop={crop} 
+                    zoom={zoom} 
+                    aspect={1} 
+                    onCropChange={setCrop} 
+                    onZoomChange={setZoom} 
+                    onCropComplete={onCropComplete} 
+                  />
+                </div>
+                <div className="settings-cropper-controls">
+                  <span>Zoom</span>
+                  <input type="range" value={zoom} min={1} max={3} step={0.1} onChange={(e) => setZoom(e.target.value)} />
+                </div>
+                <div className="cropper-actions">
+                  <button type="button" onClick={() => setRawImage(null)}>Cancel</button>
+                  <button type="button" className="apply-btn" onClick={applyCrop}>Apply Crop</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="settings-form-grid">
+            <div className="settings-field">
+              <label>Full Name</label>
+              <div className="settings-read-only-box">{currentUser?.fullName}</div>
+            </div>
+            <div className="settings-field">
+              <label>Username</label>
+              <div className="settings-read-only-box">@{currentUser?.username}</div>
+            </div>
           </div>
-          <div className="settings-field">
-            <label>Email Address</label>
-            <div className="settings-read-only-box">{currentUser?.email}</div>
+
+          <div className="settings-actions">
+            <button type="submit" className={`settings-primary-btn ${saveStatus === "Saved!" ? "saved" : ""}`} disabled={loading}>
+              {loading ? "Updating..." : saveStatus === "Saved!" ? "✓ Saved!" : "Save Changes"}
+            </button>
           </div>
-          <div className="settings-field">
-            <label>Role</label>
-            <div className="settings-read-only-box" style={{ textTransform: 'capitalize' }}>Member</div>
-          </div>
-        </div>
+        </form>
       </div>
     );
   }
@@ -166,7 +241,7 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
           <div className="settings-photo-actions">
             <input type="file" id="p-upload" hidden accept="image/*" onChange={handleFileChange} />
             <label htmlFor="p-upload" className="settings-upload-btn">Change Photo</label>
-            {previewPhoto && <button type="button" className="settings-remove-btn" onClick={() => setPreviewPhoto("")}>Remove</button>}
+            {previewPhoto && <button type="button" className="settings-remove-btn" onClick={() => { setPreviewPhoto(""); setSaveStatus(""); }}>Remove</button>}
           </div>
         </div>
 
@@ -190,7 +265,7 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
               </div>
               <div className="settings-field">
                 <label>Age</label>
-                <input type="number" {...register("age", { required: true, min: 12 })} />
+                <input type="number" {...register("age", { required: true, min: 12, valueAsNumber: true })} />
               </div>
               <div className="settings-field">
                 <label>Gender</label>
@@ -274,8 +349,8 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
           <textarea rows={4} {...register("about", { required: true })} placeholder="Tell the world about your work..." />
         </div>
 
-        <button type="submit" className="settings-primary-btn" disabled={loading}>
-          {loading ? "Saving..." : "Save Changes"}
+        <button type="submit" className={`settings-primary-btn ${saveStatus === "Saved!" ? "saved" : ""}`} disabled={loading}>
+          {loading ? "Saving..." : saveStatus === "Saved!" ? "✓ Saved!" : "Save Changes"}
         </button>
       </form>
 
@@ -487,7 +562,9 @@ function NotificationTab({ profile, token, onUpdate }) {
         </div>
       )}
 
-      <button className="settings-primary-btn" onClick={handleSave}>{saveStatus || "Save Preferences"}</button>
+      <button className={`settings-primary-btn ${saveStatus === "Saved!" ? "saved" : ""}`} onClick={handleSave} disabled={saveStatus === "Saving..."}>
+        {saveStatus === "Saving..." ? "Saving..." : saveStatus === "Saved!" ? "✓ Saved!" : "Save Preferences"}
+      </button>
     </div>
   );
 }
