@@ -20,7 +20,7 @@ Traditional artisans struggle to reach a broader audience in a digital-first wor
 **KalaSetu** acts as a digital bridge between artisans and the modern marketplace. It is a cultural networking platform designed to empower creators and preserve India's rich artistic heritage.
 
 It enables:
-- **Direct interaction** between creators and buyers.
+- **Direct interaction** between creators.
 - **Real-time communication** and collaboration.
 - A **scalable platform** to showcase and preserve cultural craftsmanship.
 
@@ -118,14 +118,6 @@ cd frontend
 npm install
 npm run dev
 ```
-
----
-
-## 📄 License & Credits
-
-Distributed under the MIT License. Developed as a final year engineering project to bridge the gap between tradition and technology.
-
----
 
 <div align="center">
   🚧 <b>Live Demo: https://kala-setu-indol.vercel.app/</b>
