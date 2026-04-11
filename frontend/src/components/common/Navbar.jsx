@@ -187,15 +187,13 @@ function Navbar() {
               <i className="fi fi-sr-search" />
               Explore
             </button>
-            {effectiveUser.role !== "user" && (
-              <button
-                className={`g-nav-item ${isActivePath("/messages") ? "is-active" : ""}`}
-                onClick={() => navigate("/messages")}
-              >
-                <i className="fi fi-sr-comments" />
-                Messages
-              </button>
-            )}
+            <button
+              className={`g-nav-item ${isActivePath("/messages") ? "is-active" : ""}`}
+              onClick={() => navigate("/messages")}
+            >
+              <i className="fi fi-sr-comments" />
+              Messages
+            </button>
           </div>
 
           <div className="g-nav-actions">
@@ -413,17 +411,15 @@ function Navbar() {
           <span>Explore</span>
         </button>
 
-        {effectiveUser.role !== "user" && (
-          <button
-            className={`g-m-nav-item ${isActivePath("/messages") ? "is-active" : ""}`}
-            onClick={() => navigate("/messages")}
-          >
-            <motion.div whileTap={{ scale: 0.9 }}>
-              <i className="fi fi-sr-comments" />
-            </motion.div>
-            <span>Messages</span>
-          </button>
-        )}
+        <button
+          className={`g-m-nav-item ${isActivePath("/messages") ? "is-active" : ""}`}
+          onClick={() => navigate("/messages")}
+        >
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <i className="fi fi-sr-comments" />
+          </motion.div>
+          <span>Messages</span>
+        </button>
 
         <button
           className={`g-m-nav-item ${isActivePath("/profile") ? "is-active" : ""}`}

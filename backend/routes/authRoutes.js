@@ -149,6 +149,37 @@ router.get("/user/:id", async (req, res, next) => {
   }
 });
 
+// CHANGE Password
+router.put("/change-password", requireAuth, async (req, res, next) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Current and new passwords are required" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect current password" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // DELETE User Account (Hard Delete with deep cascading)
 router.delete("/account", requireAuth, deleteAccountLimiter, async (req, res, next) => {
   const session = await mongoose.startSession();

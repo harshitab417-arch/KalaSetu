@@ -64,8 +64,9 @@ app.use((req, _res, next) => {
     const sanitizeObject = (obj) => {
       const clean = {};
       for (const key of Object.keys(obj)) {
-        // Skip base64 image/document fields — XSS sanitizer would corrupt them
-        if (["photo", "image", "verificationDocument"].includes(key)) {
+        // Skip fields that should not be sanitized (files, base64 data, and raw passwords)
+        const skipFields = ["photo", "image", "verificationDocument", "password", "oldPassword", "newPassword", "confirmPassword", "currentPassword"];
+        if (skipFields.includes(key)) {
           clean[key] = obj[key];
         } else {
           clean[key] = sanitizeValue(obj[key]);
