@@ -45,6 +45,10 @@ router.put("/:userId/follow", requireAuth, async (req, res, next) => {
     const me = await User.findById(req.user.id);
     if (!target || !me) return res.status(404).json({ message: "User not found" });
 
+    if (target.role === "user") {
+      return res.status(400).json({ message: "Members cannot be followed" });
+    }
+
     const targetProfile = await Profile.findOne({ user: target._id });
     const isPrivate = targetProfile?.isPrivate || false;
 
@@ -311,7 +315,16 @@ router.get("/:userId", async (req, res, next) => {
       "user",
       "username fullName role email createdAt"
     );
-    if (!profile) return res.status(404).json({ message: "Profile not found" });
+
+    if (!profile) {
+      // Check if the user exists even if they don't have a profile record
+      const user = await User.findById(req.params.userId).select("username fullName role email createdAt");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      // Return a basic profile object for standard members
+      return res.json({ user });
+    }
+
     res.json(profile);
   } catch (err) {
     next(err);
