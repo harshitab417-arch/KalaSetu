@@ -346,7 +346,15 @@ function ProfileTab({ profile, currentUser, token, onUpdate }) {
 
         <div className="settings-field full-width">
           <label>About You / Organization</label>
-          <textarea rows={4} {...register("about", { required: true })} placeholder="Tell the world about your work..." />
+          <textarea 
+            rows={4} 
+            {...register("about", { 
+              required: "About section is required",
+              maxLength: { value: 300, message: "Maximum 300 characters allowed" }
+            })} 
+            placeholder="Tell the world about your work..." 
+          />
+          {errors.about && <small className="settings-error-text">{errors.about.message}</small>}
         </div>
 
         <button type="submit" className={`settings-primary-btn ${saveStatus === "Saved!" ? "saved" : ""}`} disabled={loading}>

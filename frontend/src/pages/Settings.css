@@ -73,10 +73,6 @@
   color: var(--accent-600);
 }
 
-.sidebar-nav-item.danger:hover {
-  /* Removed background and color change */
-}
-
 .sidebar-nav-item.danger.active {
   background: linear-gradient(135deg, var(--accent-600), var(--accent-500));
   color: white;
@@ -399,6 +395,15 @@
   border: 1px solid #fee2e2;
 }
 
+.settings-error-text {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
+  margin-top: 2px;
+  padding-left: 4px;
+}
+
 /* ── Cropper ────────────────────────────────────────────────────────── */
 .settings-cropper-overlay {
   position: fixed;
@@ -594,10 +599,6 @@
   font-size: 14px;
 }
 
-.reg-multi-select-option:hover {
-  /* Removed background change */
-}
-
 .reg-multi-select-option.selected {
   background: rgba(47, 111, 109, 0.08);
   font-weight: 600;
@@ -656,10 +657,6 @@
   justify-content: center;
   transition: all 0.2s ease;
   border-radius: 50%;
-}
-
-.password-toggle-trigger:hover {
-  /* Removed background change */
 }
 
 .password-toggle-trigger i {
