@@ -1,82 +1,104 @@
 import express from "express";
-import os from "os";
-import path from "path";
-import { EventEmitter } from "events";
-import { fileURLToPath } from "url";
+import { getOsInfo, getPathInfo, triggerEvent } from "../controllers/coreDemoController.js";
 
 const router = express.Router();
 
-// ── 0. Middleware to add Native HTTP Header Proof ───────────────────
+/**
+ * @swagger
+ * tags:
+ *   name: Core Demo
+ *   description: Demo endpoints showcasing Node.js core module capabilities
+ */
+
+// Middleware: add Native HTTP Header Proof
 router.use((req, res, next) => {
   res.setHeader("X-Server-Engine", "NodeJS-Native-HTTP-Module");
   next();
 });
 
-// ── 1. Events Module Setup ──────────────────────────────────────────
-class NodeExplorerEmitter extends EventEmitter {}
-const nodeEmitter = new NodeExplorerEmitter();
+/**
+ * @swagger
+ * /api/core-demo/os:
+ *   get:
+ *     summary: Get OS information from the server
+ *     tags: [Core Demo]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: OS details returned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 platform:
+ *                   type: string
+ *                   example: linux
+ *                 arch:
+ *                   type: string
+ *                   example: x64
+ *                 cpus:
+ *                   type: integer
+ *                   example: 4
+ *                 totalMemoryMB:
+ *                   type: number
+ *                 freeMemoryMB:
+ *                   type: number
+ *                 uptime:
+ *                   type: number
+ *                 hostname:
+ *                   type: string
+ */
+router.get("/os", getOsInfo);
 
-nodeEmitter.on("exploration_triggered", (data) => {
-  console.log(`[CORE_EVENT] Node modules explored at ${new Date().toLocaleTimeString()} by ID: ${data.id}`);
-});
+/**
+ * @swagger
+ * /api/core-demo/path:
+ *   get:
+ *     summary: Get server path information
+ *     tags: [Core Demo]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Path details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dirname:
+ *                   type: string
+ *                 basename:
+ *                   type: string
+ *                 extname:
+ *                   type: string
+ *                 join:
+ *                   type: string
+ */
+router.get("/path", getPathInfo);
 
-// ── 2. Path Module Setup ────────────────────────────────────────────
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// ══════════════════════════════════════════════════════════════════════
-// ROUTE A — GET /api/core-demo/os
-// ══════════════════════════════════════════════════════════════════════
-router.get("/os", (req, res) => {
-  res.json({
-    module: "OS (Operating System)",
-    data: {
-      platform: os.platform(),
-      architecture: os.arch(),
-      cpuCount: os.cpus().length,
-      model: os.cpus()[0].model,
-      upTime_Hours: (os.uptime() / 3600).toFixed(2),
-      totalMemory_GB: (os.totalmem() / (1024 ** 3)).toFixed(2),
-      freeMemory_GB: (os.freemem() / (1024 ** 3)).toFixed(2),
-      systemVersion: os.release()
-    }
-  });
-});
-
-// ══════════════════════════════════════════════════════════════════════
-// ROUTE B — GET /api/core-demo/path
-// ══════════════════════════════════════════════════════════════════════
-router.get("/path", (req, res) => {
-  res.json({
-    module: "Path (File Path Utilities)",
-    data: {
-      currentDirectory: __dirname,
-      currentFileName: path.basename(__filename),
-      fileExtension: path.extname(__filename),
-      normalizedProjectRoot: path.resolve(".."),
-      joinedPathExample: path.join(__dirname, "demo", "output.txt"),
-      pathSeparator: path.sep,
-      delimiter: path.delimiter
-    }
-  });
-});
-
-// ══════════════════════════════════════════════════════════════════════
-// ROUTE C — GET /api/core-demo/events
-// ══════════════════════════════════════════════════════════════════════
-router.get("/events", (req, res) => {
-  const eventId = Math.random().toString(36).substr(2, 5);
-  
-  // Trigger the event
-  nodeEmitter.emit("exploration_triggered", { id: eventId });
-
-  res.json({
-    module: "Events (EventEmitter)",
-    message: "A custom 'exploration_triggered' event has been emitted!",
-    eventID_Generated: eventId,
-    timestamp: new Date().toISOString(),
-    instruction: "Check your backend terminal console to see the '[CORE_EVENT]' log."
-  });
-});
+/**
+ * @swagger
+ * /api/core-demo/events:
+ *   get:
+ *     summary: Trigger a custom Node.js EventEmitter event (demo)
+ *     tags: [Core Demo]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Event triggered and log returned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 log:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ */
+router.get("/events", triggerEvent);
 
 export default router;
