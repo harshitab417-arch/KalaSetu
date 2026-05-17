@@ -1,197 +1,138 @@
-.ks-footer {
+.ks-compact-footer {
   width: 100%;
   background-color: #1e293b;
   color: #94a3b8;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   border-top: 1px solid #334155;
   margin-top: auto;
-  padding: 64px 48px 32px 48px;
-  position: relative;
-  overflow: hidden;
+  padding: 18px 32px;
 }
 
-@media (max-width: 768px) {
-  .ks-footer {
-    padding: 48px 24px 24px 24px;
-  }
-}
-
-.ks-footer-top {
+.ks-compact-container {
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  gap: 64px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid #334155;
   flex-wrap: wrap;
-}
-
-.ks-footer-brand {
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 
-.ks-footer-logo-row {
+.ks-compact-left {
   display: flex;
   align-items: center;
   gap: 12px;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-.ks-footer-logo {
-  height: 36px;
-  width: 36px;
+.ks-compact-left:hover {
+  opacity: 0.9;
+}
+
+.ks-compact-logo {
+  height: 22px;
+  width: 22px;
   object-fit: contain;
 }
 
-.ks-footer-title {
+.ks-compact-brand {
   font-family: "Fraunces", Georgia, serif;
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 700;
   color: #f8fafc;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
 }
 
-.ks-footer-tagline {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #cbd5e1;
-  margin: 0;
-}
-
-.ks-newsletter-form {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.ks-newsletter-input {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #475569;
-  background-color: #0f172a;
-  color: #f8fafc;
+.ks-compact-copy {
   font-size: 13px;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.ks-newsletter-input::placeholder {
   color: #64748b;
+  border-left: 1px solid #334155;
+  padding-left: 12px;
 }
 
-.ks-newsletter-input:focus {
-  border-color: #2f6f6d;
-}
-
-.ks-newsletter-btn {
-  padding: 12px 20px;
-  border-radius: 8px;
-  border: none;
-  background: linear-gradient(135deg, #2f6f6d, #245856);
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.ks-newsletter-btn:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-}
-
-.ks-footer-cols {
+.ks-compact-right {
   display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  gap: 64px;
+  align-items: center;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
-@media (max-width: 992px) {
-  .ks-footer-cols {
-    justify-content: flex-start;
-    gap: 40px;
-  }
-}
-
-.ks-footer-col {
+.ks-compact-links {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 160px;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 
-.ks-footer-col h4 {
-  font-size: 15px;
-  font-weight: 600;
-  color: #f8fafc;
-  margin: 0 0 8px 0;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.ks-footer-col button {
+.ks-compact-links button {
   background: none;
   border: none;
   padding: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: fit-content;
-}
-
-.ks-footer-col button:hover {
-  color: #38bdf8;
-  transform: translateX(3px);
-}
-
-.ks-footer-bottom {
-  max-width: 1280px;
-  margin: 32px auto 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
+  color: #cbd5e1;
   font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-.ks-footer-copyright {
-  color: #64748b;
+.ks-compact-links button:hover {
+  color: #2f6f6d;
+  text-decoration: underline;
 }
 
-.ks-footer-social {
+.ks-compact-socials {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
+  border-left: 1px solid #334155;
+  padding-left: 16px;
 }
 
-.ks-footer-social button {
+.ks-compact-socials button {
   background: #334155;
   border: none;
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #f8fafc;
-  font-size: 16px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.ks-footer-social button:hover {
+.ks-compact-socials button:hover {
   background: #2f6f6d;
   transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .ks-compact-footer {
+    padding: 16px 20px;
+  }
+  .ks-compact-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .ks-compact-copy {
+    border-left: none;
+    padding-left: 0;
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .ks-compact-left {
+    flex-wrap: wrap;
+  }
+  .ks-compact-socials {
+    border-left: none;
+    padding-left: 0;
+  }
 }
 
 /* Modals */
