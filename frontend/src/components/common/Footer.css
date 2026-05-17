@@ -1,0 +1,138 @@
+.gh-footer {
+  width: 100%;
+  padding: 32px 24px;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: auto;
+}
+.gh-footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.gh-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+  font-weight: 500;
+}
+.gh-footer-logo {
+  height: 22px;
+  width: 22px;
+  object-fit: contain;
+}
+.gh-footer-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.gh-footer-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.gh-footer-btn:hover {
+  color: #0284c7;
+  text-decoration: underline;
+}
+.gh-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+}
+.gh-modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 550px;
+  width: 100%;
+  padding: 32px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  animation: modalEnter 0.2s ease-out;
+}
+.gh-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 16px;
+}
+.gh-modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+.gh-modal-close {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.gh-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.gh-modal-body {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+}
+.gh-modal-body p {
+  margin-bottom: 16px;
+}
+.gh-modal-body p:last-child {
+  margin-bottom: 0;
+}
+.gh-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+  z-index: 999999;
+  animation: toastEnter 0.3s ease-out;
+}
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes toastEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

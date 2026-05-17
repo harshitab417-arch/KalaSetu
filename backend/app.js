@@ -15,7 +15,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
-import subscriptionRoutes from "./routes/subscriptionRoutes.js";
+
 
 import { generalApiLimiter } from "./middleware/rateLimitMiddleware.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -99,7 +99,7 @@ app.use("/messages", messageRoutes);
 app.use("/profiles", profileRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/reports", reportRoutes);
-app.use("/subscription", subscriptionRoutes);
+
 
 // ─── 10. Swagger API Docs ─────────────────────────────────────────────────────
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

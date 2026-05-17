@@ -8,6 +8,7 @@ import "../components/home/Home.css";
 import { ProfileHeaderSkeleton, PostSkeleton } from "../components/common/Skeleton";
 import { useAuthStore } from "../store/useAuthStore";
 
+import Footer from "../components/common/Footer";
 import API from "../utils/api";
 
 const getRoleLabel = (role) => {
@@ -890,6 +891,8 @@ function Profile() {
           </div>
         )}
       </div>
+
+      <Footer />
 
       {moreModal && (
         <div className="prof-logout-overlay" onClick={() => { setMoreModal(null); setReportReason(""); setReportDetails(""); }}>

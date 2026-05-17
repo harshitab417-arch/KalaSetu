@@ -93,15 +93,4 @@ a {
   font-family: "Fraunces", Georgia, serif;
 }
 
-/* Submission Footer (Academic Proof) */
-.submission-footer {
-  width: 100%;
-  background-color: var(--brand-700, #2f6f6d);
-  color: #ffffff;
-  padding: 18px 24px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  margin-top: auto; /* Pushes to bottom in flex containers */
-}
+

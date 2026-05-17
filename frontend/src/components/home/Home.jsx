@@ -8,6 +8,7 @@ import Navbar from "../common/Navbar";
 import { useFeedStore } from "../../store/useFeedStore";
 import { PostSkeleton } from "../common/Skeleton";
 
+import Footer from "../common/Footer";
 import API from "../../utils/api";
 
 const CATEGORIES = [
@@ -820,6 +821,8 @@ function Home() {
           </div>
         </aside>
       </div>
+
+      <Footer />
 
       {/* ─── Likes Modal ──────────────────────────────────── */}
       {likesModalPostId && (
