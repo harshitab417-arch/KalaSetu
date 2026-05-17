@@ -194,6 +194,7 @@ function Navbar() {
               <i className="fi fi-sr-comments" />
               Messages
             </button>
+
           </div>
 
           <div className="g-nav-actions">
@@ -358,7 +359,7 @@ function Navbar() {
                   <div className="g-profile-menu-item" onClick={() => { navigate("/settings"); setShowProfileMenu(false); }}>
                     <i className="fi fi-sr-settings" /> Settings
                   </div>
-                  <div className="g-profile-menu-divider" />
+
                   <div className="g-profile-menu-item g-profile-menu-logout" onClick={handleLogoutClick}>
                     <i className="fi fi-sr-sign-out-alt" /> Logout
                   </div>
@@ -436,6 +437,8 @@ function Navbar() {
           </motion.div>
           <span>Profile</span>
         </button>
+
+
       </div>
     </>
   );

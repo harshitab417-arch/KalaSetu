@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import Settings from "./pages/Settings";
+
 import "./App.css";
 import "./index.css";
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/edit-post/:postId" element={<EditPost />} />
           <Route path="/settings" element={<Settings />} />
+
         </Routes>
       </BrowserRouter>
       <Analytics />
